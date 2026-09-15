@@ -10,6 +10,17 @@
   <a href="https://github.com/tw93/Pake/issues?q=is%3Aissue+is%3Aclosed" target="_blank"><img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/tw93/Pake.svg?style=flat-square"></a>
 </div>
 
+## Fork Notes
+
+This repository is maintained as a fork of [tw93/Pake](https://github.com/tw93/Pake). The fork remote is [sxwollo/Pake](https://github.com/sxwollo/Pake), while `upstream` is kept for pulling updates from the original project.
+
+Changes carried by this fork:
+
+- Keeps `main` rebased on the latest upstream Pake release line.
+- Extends the Tauri remote capability allowlist from HTTPS-only domains to `https://*.*`, `https://*.*:*`, `http://*.*`, and `http://*.*:*`, so packaged apps can load HTTP sites and explicit-port URLs.
+- Adds local `tuitui` build helpers through `Makefile`: `make tuitui` builds and installs `/Applications/推推.app`, while `make tuitui-debug` builds a debug app with `socks5://127.0.0.1:9090` temporarily written into the local Pake config.
+- Includes a custom `src-tauri/icons/tuitui.icns` icon for the `tuitui` app build.
+
 ## Features
 
 - 🎐 **Lightweight**: Installer is nearly 20 times smaller than Electron packages, typically under 10M on disk
