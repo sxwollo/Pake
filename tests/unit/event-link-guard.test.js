@@ -152,12 +152,16 @@ function getClickGuard(context) {
   ).handler;
 }
 
-function makeAnchor(href, target = "_blank") {
+function makeAnchor(href, target = "_blank", attrs = {}) {
   return {
     href,
     target,
-    download: "",
-    getAttribute: (name) => (name === "href" ? href : ""),
+    download: attrs.download || "",
+    getAttribute: (name) => {
+      if (name === "href") return href;
+      if (name === "download") return attrs.download || "";
+      return "";
+    },
   };
 }
 
@@ -796,6 +800,35 @@ describe("event link guard", () => {
     expect(event.preventDefault).not.toHaveBeenCalled();
     expect(event.stopImmediatePropagation).not.toHaveBeenCalled();
     expect(context.window.location.href).toBe("https://example.com/app");
+  });
+
+  it("opens target blank links with a download attribute in the system browser", () => {
+    const context = loadEventHelpers({ withTauri: true });
+    context.window.location.href =
+      "https://im.live.360.cn:8282/fed/web-module/";
+    context.window.location.origin = "https://im.live.360.cn:8282";
+    context.window.location.pathname = "/fed/web-module/";
+    context.window.pakeConfig = { new_window: false };
+    runDomReady(context);
+
+    const downloadUrl =
+      "https://im.live.360.cn:8989/uploads/W87o0TFxIwISTH44BNAWqCWpjBN.md?e=20260721T080805&s=F57wlpwGvWZ38KSaIEOrQGFjACzU2eUT7AyazgZdNaA#fid=c219f5768a4fae58ff88e5f9&uid=7652669648798484&filename=%E6%8E%A5%E4%BA%86%E5%8F%A3%E6%A3%BA%E6%9D%90%E5%90%8E_%E6%88%91%E5%8F%AA%E6%83%B3%E6%8B%BF%E9%92%B1%E8%B7%91%E8%B7%AF_%E7%AC%AC1-7%E7%AB%A0%E7%A1%AE%E8%AE%A4%E7%89%88.md";
+    const filename = "接了口棺材后_我只想拿钱跑路_第1-7章确认版.md";
+    const anchor = makeAnchor(downloadUrl, "_blank", { download: filename });
+    const event = makeClickEvent(anchor);
+
+    getClickGuard(context)(event);
+
+    expect(event.preventDefault).toHaveBeenCalled();
+    expect(event.stopImmediatePropagation).toHaveBeenCalled();
+    expect(anchor.target).toBe("_blank");
+    expect(context.invokeCalls).toContainEqual([
+      "plugin:shell|open",
+      { path: downloadUrl },
+    ]);
+    expect(
+      context.invokeCalls.some(([command]) => command === "download_file"),
+    ).toBe(false);
   });
 
   it("still opens external target=_blank links in the system browser", () => {

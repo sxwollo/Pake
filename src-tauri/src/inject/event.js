@@ -792,6 +792,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Sites such as Tuitui use target="_blank" + download to delegate the
+      // download to the user's browser. Keep that behavior instead of turning
+      // the link into an in-app navigation or a Pake-managed reqwest download.
+      if (target === "_blank" && anchorElement.download) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        handleExternalLink(absoluteUrl);
+        return;
+      }
+
       // Handle _blank links: internal links stay in-app, external links open in the system browser
       if (target === "_blank") {
         if (forceInternalNavigation) {
