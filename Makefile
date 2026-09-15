@@ -14,6 +14,7 @@ tuitui:
 	@sleep 1
 	@rm -rf $(TUITUI_APP)
 	@cp -R $(TUITUI_RELEASE) $(TUITUI_APP)
+	@rm -rf $(TUITUI_RELEASE)
 	@open $(TUITUI_APP)
 	@echo "✔ 构建完成并已启动: $(TUITUI_APP)"
 
@@ -27,5 +28,6 @@ tuitui-debug:
 	@sleep 1
 	@rm -rf $(TUITUI_APP)
 	@cp -R $(TUITUI_DEBUG) $(TUITUI_APP)
+	@rm -rf $(TUITUI_DEBUG)
 	@open $(TUITUI_APP)
 	@echo "✔ 调试版构建完成并已启动: $(TUITUI_APP)"
