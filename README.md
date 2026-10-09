@@ -17,7 +17,6 @@ This repository is maintained as a fork of [tw93/Pake](https://github.com/tw93/P
 Changes carried by this fork:
 
 - Keeps `main` rebased on the latest upstream Pake release line.
-- Extends the Tauri remote capability allowlist from HTTPS-only domains to `https://*.*`, `https://*.*:*`, `http://*.*`, and `http://*.*:*`, so packaged apps can load HTTP sites and explicit-port URLs.
 - Adds local `tuitui` build helpers through `Makefile`: `make tuitui` builds and installs `/Applications/推推.app`, while `make tuitui-debug` builds a debug app with `socks5://127.0.0.1:9090` temporarily written into the local Pake config.
 - Includes a custom `src-tauri/icons/tuitui.icns` icon for the `tuitui` app build.
 - Injects a `tuitui`-scoped sidebar-icon flicker fix via `src-tauri/src/inject/custom.js`.

@@ -30,7 +30,7 @@ their original appearance.
 attempt promoted the sidebar to its own GPU layer with `transform:
 translateZ(0)`. That fixed the flicker but forced the whole page into
 accelerated compositing, which is a known WKWebView state where the native
-blink caret in an *empty* input stops animating — the caret only reappeared
+blink caret in an _empty_ input stops animating — the caret only reappeared
 once the field had content. `contain` isolates paint **without** creating a
 compositing layer, so it fixes the flicker while leaving the caret blink alone.
 
@@ -54,7 +54,15 @@ and re-apply the fork intent rather than overwriting upstream wholesale.
   rewritten into in-app navigation or a Pake-managed download. Tuitui uses this
   pattern to delegate downloads to the user's browser. Covered by
   `tests/unit/event-link-guard.test.js`.
-- **`src-tauri/capabilities/default.json`** — the remote capability allowlist is
-  widened from HTTPS-only domains to `https://*.*`, `https://*.*:*`,
-  `http://*.*`, and `http://*.*:*` so packaged apps can load HTTP sites and
-  explicit-port URLs.
+
+## Dropped fork patches
+
+- **`src-tauri/capabilities/default.json` remote allowlist** — the fork used to
+  widen `remote.urls` to `https://*.*`, `https://*.*:*`, `http://*.*`, and
+  `http://*.*:*` so packaged apps could load HTTP sites and explicit-port URLs.
+  Upstream now keeps the packaged capability local-only and grants IPC to the
+  exact configured entry origin (scheme, host, and port) through
+  `PakeConfig::remote_capability`, which already covers
+  `https://im.live.360.cn:8282`. Do not re-add the wildcards: they would grant
+  native IPC to every remote origin and fail upstream's
+  `remote_ipc_requires_the_configured_scheme_host_and_port` test.
